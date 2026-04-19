@@ -214,6 +214,7 @@
 
     @media screen { .method-banner { display: none; } }
     @media screen { .print-date { display: none; } }
+    @media screen { .print-meta { display: none; } }
 
     @media print {
       body { background: white; padding: 0; min-height: 0; display: block; }
@@ -224,6 +225,10 @@
       .print-date { font-size: 1rem; font-weight: 600; color: black; }
       .mono-value { font-family: Consolas, Menlo, Monaco, 'Lucida Console', 'Courier New', monospace; }
       .date-row { display: none; }
+      .summary h2 { display: none; }
+      .initials-row, .store-row { display: none; }
+      .print-meta { font-size: .9rem; font-weight: 600; margin-bottom: .6rem; color: #333; }
+      .address-label { font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: #555; margin-bottom: .25rem; }
       .address-block { background: white; border-color: #aaa; }
       .summary-label { color: #444; }
       .method-banner {
@@ -404,13 +409,15 @@
 
     <div class="summary" x-show="submitted" x-cloak>
       <h2>Order Summary</h2>
+      <div class="print-meta"><span x-text="submitted?.initials"></span> &mdash; <span x-text="submitted?.store"></span></div>
+      <p class="address-label">Ship To</p>
       <div class="address-block">
         <div x-text="submitted?.name"></div>
         <div class="address-value" x-text="submitted?.address"></div>
       </div>
       <div class="summary-grid">
-        <div class="summary-row"><span class="summary-label">Initials</span>       <span class="summary-value" x-text="submitted?.initials"></span></div>
-        <div class="summary-row"><span class="summary-label">Store</span>          <span class="summary-value" x-text="submitted?.store"></span></div>
+        <div class="summary-row initials-row"><span class="summary-label">Initials</span>       <span class="summary-value" x-text="submitted?.initials"></span></div>
+        <div class="summary-row store-row"><span class="summary-label">Store</span>          <span class="summary-value" x-text="submitted?.store"></span></div>
         <div class="summary-row date-row"><span class="summary-label">Date</span>           <span class="summary-value" x-text="submitted?.date"></span></div>
         <div class="summary-row" x-show="submitted?.email"><span class="summary-label">Email</span>  <span class="summary-value mono-value" x-text="submitted?.email"></span></div>
         <div class="summary-row" x-show="submitted?.phone"><span class="summary-label">Phone</span>  <span class="summary-value" x-text="submitted?.phone"></span></div>
