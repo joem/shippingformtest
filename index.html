@@ -343,6 +343,14 @@
       </div>
 
       <div class="field">
+        <label>Email tracking?<span class="req">*</span></label>
+        <div class="radio-group">
+          <label><input type="radio" x-model="form.emailTracking" value="Yes" required> Yes</label>
+          <label><input type="radio" x-model="form.emailTracking" value="No"> No</label>
+        </div>
+      </div>
+
+      <div class="field">
         <label>Package Weight<span class="req">*</span></label>
         <div style="display: flex; gap: .75rem;">
           <div style="flex: 1;">
@@ -393,13 +401,6 @@
         </div>
       </div>
 
-      <div class="field">
-        <label>Email tracking?<span class="req">*</span></label>
-        <div class="radio-group">
-          <label><input type="radio" x-model="form.emailTracking" value="Yes" required> Yes</label>
-          <label><input type="radio" x-model="form.emailTracking" value="No"> No</label>
-        </div>
-      </div>
 
       <div class="field">
         <label for="specialRequests">Notes/Special Requests</label>
