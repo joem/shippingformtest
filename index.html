@@ -235,8 +235,16 @@
     <form @submit.prevent="submit()">
 
       <div class="field">
-        <label for="initials">Employee Initials<span class="req">*</span></label>
-        <input id="initials" type="text" x-model="form.initials" placeholder="AB" required>
+        <div style="display: flex; gap: .75rem;">
+          <div style="flex: 1;">
+            <label for="initials">Employee Initials<span class="req">*</span></label>
+            <input id="initials" type="text" x-model="form.initials" placeholder="AB" required>
+          </div>
+          <div style="flex: 1;">
+            <label for="date">Date<span class="req">*</span></label>
+            <input id="date" type="date" x-model="form.date" required>
+          </div>
+        </div>
       </div>
 
       <div class="field">
@@ -247,11 +255,6 @@
           <label><input type="radio" x-model="form.store" value="LIC"> LIC</label>
           <label><input type="radio" x-model="form.store" value="Pittsford"> Pittsford</label>
         </div>
-      </div>
-
-      <div class="field">
-        <label for="date">Date<span class="req">*</span></label>
-        <input id="date" type="date" x-model="form.date" required>
       </div>
 
       <div class="field">
