@@ -89,7 +89,22 @@
     .radio-group input[type="radio"] {
       width: auto;
       accent-color: #2563eb;
+      flex-shrink: 0;
     }
+
+    .radio-option {
+      display: flex;
+      align-items: flex-start;
+      gap: .4rem;
+    }
+
+    .radio-option input[type="radio"] {
+      margin-top: .2rem;
+    }
+
+    .radio-option-text { display: flex; flex-direction: column; }
+    .radio-option-text span { font-weight: 600; font-size: .95rem; color: #111; }
+    .radio-option-text small { font-weight: 400; font-size: .8rem; color: #6b7280; line-height: 1.3; }
 
     button[type="submit"] {
       width: 100%;
@@ -190,14 +205,37 @@
       </div>
 
       <div class="field">
-        <label for="method">Shipping Method</label>
-        <select id="method" x-model="form.method" required>
-          <option value="" disabled>Select a method</option>
-          <option value="Standard">Standard (5–7 days)</option>
-          <option value="Express">Express (2–3 days)</option>
-          <option value="Overnight">Overnight (next day)</option>
-          <option value="Economy">Economy (7–14 days)</option>
-        </select>
+        <label>Shipping Method</label>
+        <div class="radio-group" style="flex-direction: column; gap: .6rem;">
+          <label class="radio-option">
+            <input type="radio" x-model="form.method" value="USPS Media Mail" required>
+            <span class="radio-option-text">
+              <span>USPS Media Mail</span>
+              <small>Books, DVDs, CDs, and other approved media only. Not for general merchandise.</small>
+            </span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" x-model="form.method" value="USPS Ground Advantage">
+            <span class="radio-option-text">
+              <span>USPS Ground Advantage</span>
+              <small>Reliable ground delivery in 2–5 business days. Good for most packages.</small>
+            </span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" x-model="form.method" value="USPS Priority">
+            <span class="radio-option-text">
+              <span>USPS Priority</span>
+              <small>Faster delivery in 1–3 business days. Includes tracking and insurance.</small>
+            </span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" x-model="form.method" value="UPS Ground">
+            <span class="radio-option-text">
+              <span>UPS Ground</span>
+              <small>Delivery in 1–5 business days depending on destination. Reliable for heavier packages.</small>
+            </span>
+          </label>
+        </div>
       </div>
 
       <div class="field">
