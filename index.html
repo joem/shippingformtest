@@ -199,12 +199,24 @@
     .summary-label { font-weight: 600; }
     .summary-value { word-break: break-word; }
 
+    @media screen { .method-banner { display: none; } }
+
     @media print {
       body { background: white; padding: 0; min-height: 0; display: block; }
       .card { box-shadow: none; max-width: 100%; }
       form, .help-btn, .req-note { display: none !important; }
       .summary { margin-top: 0; border: none; background: white; color: black; padding: 0; }
       .summary h2 { color: black; }
+      .method-banner {
+        border: 4px solid black;
+        padding: .75rem 1rem;
+        margin-bottom: 1.25rem;
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 900;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+      }
     }
   </style>
 </head>
@@ -223,6 +235,8 @@
       this.$nextTick(() => setTimeout(() => window.print(), 50));
     }
   }">
+    <div class="method-banner" x-show="submitted?.method && submitted?.method !== 'USPS Media Mail'" x-text="submitted?.method"></div>
+
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: .5rem;">
       <h1 style="margin-bottom: 0;">Shipping Form</h1>
       <button type="button" class="help-btn" @click="helpOpen = true">Help</button>
