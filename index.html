@@ -213,6 +213,7 @@
     .address-block .address-value { white-space: pre-wrap; }
 
     @media screen { .method-banner { display: none; } }
+    @media screen { .print-date { display: none; } }
 
     @media print {
       body { background: white; padding: 0; min-height: 0; display: block; }
@@ -220,6 +221,8 @@
       form, .help-btn, .req-note { display: none !important; }
       .summary { margin-top: 0; border: none; background: white; color: black; padding: 0; }
       .summary h2 { color: black; border-bottom: 1px solid #ccc; padding-bottom: .35rem; margin-bottom: .75rem; }
+      .print-date { font-size: 1rem; font-weight: 600; color: black; }
+      .date-row { display: none; }
       .address-block { background: white; border-color: #aaa; }
       .summary-label { color: #444; }
       .method-banner {
@@ -254,6 +257,7 @@
 
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: .5rem;">
       <h1 style="margin-bottom: 0;">Shipping Form</h1>
+      <span class="print-date" x-text="submitted?.date"></span>
       <button type="button" class="help-btn" @click="helpOpen = true">Help</button>
     </div>
     <p class="req-note" style="font-size: .8rem; color: #6b7280; margin-bottom: 1.2rem;"><span class="req">*</span> Required</p>
@@ -406,7 +410,7 @@
       <div class="summary-grid">
         <div class="summary-row"><span class="summary-label">Initials</span>       <span class="summary-value" x-text="submitted?.initials"></span></div>
         <div class="summary-row"><span class="summary-label">Store</span>          <span class="summary-value" x-text="submitted?.store"></span></div>
-        <div class="summary-row"><span class="summary-label">Date</span>           <span class="summary-value" x-text="submitted?.date"></span></div>
+        <div class="summary-row date-row"><span class="summary-label">Date</span>           <span class="summary-value" x-text="submitted?.date"></span></div>
         <div class="summary-row" x-show="submitted?.email"><span class="summary-label">Email</span>  <span class="summary-value" x-text="submitted?.email"></span></div>
         <div class="summary-row" x-show="submitted?.phone"><span class="summary-label">Phone</span>  <span class="summary-value" x-text="submitted?.phone"></span></div>
         <div class="summary-row"><span class="summary-label">Weight</span>         <span class="summary-value" x-text="submitted?.weightLbs + ' lbs' + (submitted?.weightOz ? ' ' + submitted?.weightOz + ' oz' : '')"></span></div>
