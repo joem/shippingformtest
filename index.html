@@ -286,6 +286,9 @@
             <label for="weightOz" style="font-weight: 400; font-size: .8rem; color: #6b7280; margin-top: .2rem;">oz</label>
           </div>
         </div>
+        <p x-show="form.weightLbs > 70" style="margin-top: .5rem; font-size: .85rem; color: #b45309; background: #fffbeb; border: 1px solid #fcd34d; border-radius: 5px; padding: .4rem .65rem;">
+          &#9888; Weight exceeds 70 lbs — most carriers will not accept this package.
+        </p>
       </div>
 
       <div class="field">
