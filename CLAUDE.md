@@ -11,7 +11,7 @@ A single-page employee-facing shipping form for a retail book/media store with m
 All logic, styling, and markup are in one file:
 
 - **Alpine.js** (loaded from jsDelivr CDN) drives reactivity via `x-data`, `x-model`, `x-show`, and `x-text` — no separate JS files.
-- The `x-data` object on the root `.card` div holds `form` (live input state) and `submitted` (snapshot set on submit). Submitting shallow-copies `form` into `submitted`, which makes the summary panel appear via `x-show`.
+- The `x-data` object on the root `.card` div holds `form` (live input state), `submitted` (snapshot set on submit), and `helpOpen` (boolean controlling the Help modal). Submitting shallow-copies `form` into `submitted`, which makes the summary panel appear via `x-show`.
 - There is no backend, build tool, bundler, package manager, or test suite.
 
 ## Form Fields
@@ -40,6 +40,8 @@ Two radio button layouts are used:
 
 - **`.radio-group`** — horizontal flex row, used for short single-word options (Store, Email tracking?, Send receipt?).
 - **`.radio-option` + `.radio-option-text`** — vertical stacked layout with a bold label `<span>` and a `<small>` description line, used for Shipping Method where each option has a description.
+
+The Help modal uses `.modal-backdrop` (fixed full-screen overlay, closes on outside click) containing `.modal`. It is toggled via `helpOpen`. The modal body currently holds placeholder text to be replaced with real help content later.
 
 ## Development
 
