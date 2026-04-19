@@ -106,6 +106,8 @@
     .radio-option-text span { font-weight: 600; font-size: .95rem; color: #111; }
     .radio-option-text small { font-weight: 400; font-size: .8rem; color: #6b7280; line-height: 1.3; }
 
+    .req { color: #dc2626; margin-left: .15rem; }
+
     button[type="submit"] {
       width: 100%;
       padding: .65rem;
@@ -156,16 +158,17 @@
     }
   }">
     <h1>Shipping Form</h1>
+    <p style="font-size: .8rem; color: #6b7280; margin-bottom: 1.2rem;"><span class="req">*</span> Required</p>
 
     <form @submit.prevent="submit()">
 
       <div class="field">
-        <label for="initials">Employee Initials</label>
+        <label for="initials">Employee Initials<span class="req">*</span></label>
         <input id="initials" type="text" x-model="form.initials" placeholder="AB" required>
       </div>
 
       <div class="field">
-        <label>Store</label>
+        <label>Store<span class="req">*</span></label>
         <div class="radio-group">
           <label><input type="radio" x-model="form.store" value="112th" required> 112th</label>
           <label><input type="radio" x-model="form.store" value="Broadway"> Broadway</label>
@@ -175,17 +178,17 @@
       </div>
 
       <div class="field">
-        <label for="date">Date</label>
+        <label for="date">Date<span class="req">*</span></label>
         <input id="date" type="date" x-model="form.date" required>
       </div>
 
       <div class="field">
-        <label for="name">Ship-To Name</label>
+        <label for="name">Ship-To Name<span class="req">*</span></label>
         <input id="name" type="text" x-model="form.name" placeholder="Jane Doe" required>
       </div>
 
       <div class="field">
-        <label for="address">Shipping Address</label>
+        <label for="address">Shipping Address<span class="req">*</span></label>
         <textarea id="address" x-model="form.address" placeholder="123 Main St, City, State, ZIP" required></textarea>
       </div>
 
@@ -200,7 +203,7 @@
       </div>
 
       <div class="field">
-        <label>Package Weight</label>
+        <label>Package Weight<span class="req">*</span></label>
         <div style="display: flex; gap: .75rem;">
           <div style="flex: 1;">
             <input id="weightLbs" type="number" x-model="form.weightLbs" placeholder="0" min="0" step="1" required style="text-align: right;">
@@ -214,7 +217,7 @@
       </div>
 
       <div class="field">
-        <label>Shipping Method</label>
+        <label>Shipping Method<span class="req">*</span></label>
         <div class="radio-group" style="flex-direction: column; gap: .6rem;">
           <label class="radio-option">
             <input type="radio" x-model="form.method" value="USPS Media Mail" required>
@@ -248,7 +251,7 @@
       </div>
 
       <div class="field">
-        <label>Email tracking?</label>
+        <label>Email tracking?<span class="req">*</span></label>
         <div class="radio-group">
           <label><input type="radio" x-model="form.emailTracking" value="Yes" required> Yes</label>
           <label><input type="radio" x-model="form.emailTracking" value="No"> No</label>
@@ -261,7 +264,7 @@
       </div>
 
       <div class="field">
-        <label>Send receipt with shipment?</label>
+        <label>Send receipt with shipment?<span class="req">*</span></label>
         <div class="radio-group">
           <label><input type="radio" x-model="form.sendReceipt" value="Yes" required> Yes</label>
           <label><input type="radio" x-model="form.sendReceipt" value="No"> No</label>
