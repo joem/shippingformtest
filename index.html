@@ -220,7 +220,7 @@
     helpOpen: false,
     submit() {
       this.submitted = { ...this.form };
-      this.$nextTick(() => window.print());
+      this.$nextTick(() => setTimeout(() => window.print(), 50));
     }
   }">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: .5rem;">
