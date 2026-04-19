@@ -265,13 +265,16 @@
       </div>
 
       <div class="field">
-        <label for="email">Customer Email</label>
-        <input id="email" type="text" x-model="form.email" placeholder="customer@example.com">
-      </div>
-
-      <div class="field">
-        <label for="phone">Phone #</label>
-        <input id="phone" type="tel" x-model="form.phone" placeholder="(555) 555-5555">
+        <div style="display: flex; gap: .75rem;">
+          <div style="flex: 1;">
+            <label for="email">Customer Email</label>
+            <input id="email" type="text" x-model="form.email" placeholder="customer@example.com">
+          </div>
+          <div style="flex: 1;">
+            <label for="phone">Phone #</label>
+            <input id="phone" type="tel" x-model="form.phone" placeholder="(555) 555-5555">
+          </div>
+        </div>
       </div>
 
       <div class="field">
