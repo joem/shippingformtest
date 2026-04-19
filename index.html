@@ -108,6 +108,61 @@
 
     .req { color: #dc2626; margin-left: .15rem; }
 
+    .help-btn {
+      background: none;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: .3rem .75rem;
+      font-size: .85rem;
+      color: #374151;
+      cursor: pointer;
+    }
+
+    .help-btn:hover { background: #f3f4f6; }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 1.5rem;
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.15);
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 460px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .modal-header h2 { font-size: 1.1rem; color: #111; }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      line-height: 1;
+      color: #6b7280;
+      cursor: pointer;
+      padding: .1rem .3rem;
+    }
+
+    .modal-close:hover { color: #111; }
+
     button[type="submit"] {
       width: 100%;
       padding: .65rem;
@@ -153,12 +208,29 @@
       specialRequests: '', sendReceipt: ''
     },
     submitted: null,
+    helpOpen: false,
     submit() {
       this.submitted = { ...this.form };
     }
   }">
-    <h1>Shipping Form</h1>
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: .5rem;">
+      <h1 style="margin-bottom: 0;">Shipping Form</h1>
+      <button type="button" class="help-btn" @click="helpOpen = true">Help</button>
+    </div>
     <p style="font-size: .8rem; color: #6b7280; margin-bottom: 1.2rem;"><span class="req">*</span> Required</p>
+
+    <div class="modal-backdrop" x-show="helpOpen" x-cloak @click.self="helpOpen = false">
+      <div class="modal" @keydown.escape.window="helpOpen = false">
+        <div class="modal-header">
+          <h2>Help</h2>
+          <button type="button" class="modal-close" @click="helpOpen = false">&times;</button>
+        </div>
+        <p style="color: #374151; font-size: .95rem; line-height: 1.6;">
+          [Placeholder — help text to be added here. This could include instructions for filling out the form,
+          carrier guidelines, weight limits, packaging requirements, or store-specific notes.]
+        </p>
+      </div>
+    </div>
 
     <form @submit.prevent="submit()">
 
