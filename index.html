@@ -250,7 +250,7 @@
       name: '', address: '', weightLbs: '', weightOz: '', method: '',
       initials: '', store: '', date: new Date().toLocaleDateString('en-CA'),
       email: '', phone: '', emailTracking: '',
-      specialRequests: '', sendReceipt: ''
+      specialRequests: '', sendReceipt: '', customerName: ''
     },
     submitted: null,
     submitAttempted: false,
@@ -269,7 +269,7 @@
       <span class="print-date" x-text="submitted?.date"></span>
       <div style="display: flex; gap: .5rem;">
         <button type="button" class="help-btn" @click="helpOpen = true">Help</button>
-        <button type="button" class="help-btn" style="color: #dc2626; border-color: #fca5a5;" @click="form = { name: '', address: '', weightLbs: '', weightOz: '', method: '', initials: '', store: '', date: new Date().toLocaleDateString('en-CA'), email: '', phone: '', emailTracking: '', specialRequests: '', sendReceipt: '' }; submitted = null; submitAttempted = false;">Clear</button>
+        <button type="button" class="help-btn" style="color: #dc2626; border-color: #fca5a5;" @click="form = { name: '', address: '', weightLbs: '', weightOz: '', method: '', initials: '', store: '', date: new Date().toLocaleDateString('en-CA'), email: '', phone: '', emailTracking: '', specialRequests: '', sendReceipt: '', customerName: '' }; submitted = null; submitAttempted = false;">Clear</button>
       </div>
     </div>
     <p class="req-note" style="font-size: .8rem; color: #6b7280; margin-bottom: 1.2rem;"><span class="req">*</span> Required</p>
@@ -323,7 +323,12 @@
       </div>
 
       <div class="field">
-        <label>Customer Contact Info <span style="font-weight: 400;">(at least one method is required)</span></label>
+        <label for="customerName">Customer Name<span class="req">*</span></label>
+        <input id="customerName" type="text" x-model="form.customerName" placeholder="Jane Doe" required>
+      </div>
+
+      <div class="field">
+        <label>Customer Contact Method <span style="font-weight: 400;">(at least one method is required)</span></label>
         <div style="display: flex; gap: .75rem;">
           <div style="flex: 1;">
             <label for="email" style="font-weight: 400; font-size: .8rem; color: #6b7280; margin-bottom: .2rem;">Email</label>
@@ -424,6 +429,7 @@
         <div class="summary-row initials-row"><span class="summary-label">Initials</span>       <span class="summary-value" x-text="submitted?.initials"></span></div>
         <div class="summary-row store-row"><span class="summary-label">Store</span>          <span class="summary-value" x-text="submitted?.store"></span></div>
         <div class="summary-row date-row"><span class="summary-label">Date</span>           <span class="summary-value" x-text="submitted?.date"></span></div>
+        <div class="summary-row"><span class="summary-label">Customer Name</span> <span class="summary-value" x-text="submitted?.customerName"></span></div>
         <div class="summary-row" x-show="submitted?.email"><span class="summary-label">Email</span>  <span class="summary-value mono-value" x-text="submitted?.email"></span></div>
         <div class="summary-row" x-show="submitted?.phone"><span class="summary-label">Phone</span>  <span class="summary-value" x-text="submitted?.phone"></span></div>
         <div class="summary-row"><span class="summary-label">Weight</span>         <span class="summary-value" x-text="submitted?.weightLbs + ' lbs' + (submitted?.weightOz ? ' ' + submitted?.weightOz + ' oz' : '')"></span></div>
