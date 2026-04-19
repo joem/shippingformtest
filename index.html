@@ -253,8 +253,11 @@
       specialRequests: '', sendReceipt: ''
     },
     submitted: null,
+    submitAttempted: false,
     helpOpen: false,
     submit() {
+      this.submitAttempted = true;
+      if (!this.form.email && !this.form.phone) return;
       this.submitted = { ...this.form };
       this.$nextTick(() => setTimeout(() => window.print(), 50));
     }
@@ -320,16 +323,18 @@
       </div>
 
       <div class="field">
+        <label>Customer Contact Info <span style="font-weight: 400;">(at least one method is required)</span></label>
         <div style="display: flex; gap: .75rem;">
           <div style="flex: 1;">
-            <label for="email">Customer Email</label>
+            <label for="email" style="font-weight: 400; font-size: .8rem; color: #6b7280; margin-bottom: .2rem;">Email</label>
             <input id="email" type="text" x-model="form.email" placeholder="customer@example.com">
           </div>
           <div style="flex: 1;">
-            <label for="phone">Phone #</label>
+            <label for="phone" style="font-weight: 400; font-size: .8rem; color: #6b7280; margin-bottom: .2rem;">Phone #</label>
             <input id="phone" type="tel" x-model="form.phone" placeholder="(555) 555-5555">
           </div>
         </div>
+        <p x-show="submitAttempted && !form.email && !form.phone" style="color: #dc2626; font-size: .825rem; margin-top: .35rem;">Please provide at least one contact method.</p>
       </div>
 
       <div class="field">
