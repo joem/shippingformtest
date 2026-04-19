@@ -194,9 +194,18 @@
       color: #15803d;
     }
 
-    .summary dl { display: grid; grid-template-columns: auto 1fr; gap: .3rem .75rem; }
-    .summary dt { font-weight: 600; }
-    .summary dd { word-break: break-word; }
+    .summary-grid { display: grid; grid-template-columns: auto 1fr; gap: .3rem .75rem; }
+    .summary-row { display: contents; }
+    .summary-label { font-weight: 600; }
+    .summary-value { word-break: break-word; }
+
+    @media print {
+      body { background: white; padding: 0; }
+      .card { box-shadow: none; max-width: 100%; }
+      form, .help-btn, .req-note { display: none !important; }
+      .summary { margin-top: 0; border: none; background: white; color: black; padding: 0; }
+      .summary h2 { color: black; }
+    }
   </style>
 </head>
 <body>
@@ -211,13 +220,14 @@
     helpOpen: false,
     submit() {
       this.submitted = { ...this.form };
+      this.$nextTick(() => window.print());
     }
   }">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: .5rem;">
       <h1 style="margin-bottom: 0;">Shipping Form</h1>
       <button type="button" class="help-btn" @click="helpOpen = true">Help</button>
     </div>
-    <p style="font-size: .8rem; color: #6b7280; margin-bottom: 1.2rem;"><span class="req">*</span> Required</p>
+    <p class="req-note" style="font-size: .8rem; color: #6b7280; margin-bottom: 1.2rem;"><span class="req">*</span> Required</p>
 
     <div class="modal-backdrop" x-show="helpOpen" x-cloak @click.self="helpOpen = false">
       <div class="modal" @keydown.escape.window="helpOpen = false">
@@ -355,25 +365,25 @@
         </div>
       </div>
 
-      <button type="submit">Submit</button>
+      <button type="submit">Print</button>
     </form>
 
     <div class="summary" x-show="submitted" x-cloak>
       <h2>Order Summary</h2>
-      <dl>
-        <dt>Initials</dt>         <dd x-text="submitted?.initials"></dd>
-        <dt>Store</dt>            <dd x-text="submitted?.store"></dd>
-        <dt>Date</dt>             <dd x-text="submitted?.date"></dd>
-        <dt>Ship-To Name</dt>     <dd x-text="submitted?.name"></dd>
-        <dt>Address</dt>          <dd x-text="submitted?.address"></dd>
-        <dt>Email</dt>            <dd x-text="submitted?.email || '—'"></dd>
-        <dt>Phone</dt>            <dd x-text="submitted?.phone || '—'"></dd>
-        <dt>Weight</dt>           <dd x-text="submitted?.weightLbs + ' lbs ' + submitted?.weightOz + ' oz'"></dd>
-        <dt>Method</dt>           <dd x-text="submitted?.method"></dd>
-        <dt>Email Tracking</dt>   <dd x-text="submitted?.emailTracking"></dd>
-        <dt>Special Requests</dt> <dd x-text="submitted?.specialRequests || '—'"></dd>
-        <dt>Send Receipt</dt>     <dd x-text="submitted?.sendReceipt"></dd>
-      </dl>
+      <div class="summary-grid">
+        <div class="summary-row"><span class="summary-label">Initials</span>       <span class="summary-value" x-text="submitted?.initials"></span></div>
+        <div class="summary-row"><span class="summary-label">Store</span>          <span class="summary-value" x-text="submitted?.store"></span></div>
+        <div class="summary-row"><span class="summary-label">Date</span>           <span class="summary-value" x-text="submitted?.date"></span></div>
+        <div class="summary-row"><span class="summary-label">Ship-To Name</span>   <span class="summary-value" x-text="submitted?.name"></span></div>
+        <div class="summary-row"><span class="summary-label">Address</span>        <span class="summary-value" x-text="submitted?.address"></span></div>
+        <div class="summary-row" x-show="submitted?.email"><span class="summary-label">Email</span>  <span class="summary-value" x-text="submitted?.email"></span></div>
+        <div class="summary-row" x-show="submitted?.phone"><span class="summary-label">Phone</span>  <span class="summary-value" x-text="submitted?.phone"></span></div>
+        <div class="summary-row"><span class="summary-label">Weight</span>         <span class="summary-value" x-text="submitted?.weightLbs + ' lbs' + (submitted?.weightOz ? ' ' + submitted?.weightOz + ' oz' : '')"></span></div>
+        <div class="summary-row"><span class="summary-label">Method</span>         <span class="summary-value" x-text="submitted?.method"></span></div>
+        <div class="summary-row"><span class="summary-label">Email Tracking</span> <span class="summary-value" x-text="submitted?.emailTracking"></span></div>
+        <div class="summary-row" x-show="submitted?.specialRequests"><span class="summary-label">Special Requests</span> <span class="summary-value" x-text="submitted?.specialRequests"></span></div>
+        <div class="summary-row"><span class="summary-label">Send Receipt</span>   <span class="summary-value" x-text="submitted?.sendReceipt"></span></div>
+      </div>
     </div>
   </div>
 </body>
