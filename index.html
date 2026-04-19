@@ -291,7 +291,7 @@
             <label for="weightLbs" style="font-weight: 400; font-size: .8rem; color: #6b7280; margin-top: .2rem;">lbs</label>
           </div>
           <div style="flex: 1;">
-            <input id="weightOz" type="number" x-model="form.weightOz" placeholder="0" min="0" max="15" step="1" required style="text-align: right;">
+            <input id="weightOz" type="number" x-model="form.weightOz" placeholder="0" min="0" max="15" step="1" :required="Number(form.weightLbs) === 0 || form.weightLbs === ''" style="text-align: right;">
             <label for="weightOz" style="font-weight: 400; font-size: .8rem; color: #6b7280; margin-top: .2rem;">oz</label>
           </div>
         </div>
