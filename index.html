@@ -199,14 +199,29 @@
     .summary-label { font-weight: 600; }
     .summary-value { word-break: break-word; }
 
+    .address-block {
+      font-family: Consolas, Menlo, Monaco, 'Lucida Console', 'Courier New', monospace;
+      font-size: .95rem;
+      line-height: 1.6;
+      padding: .65rem .75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      background: #fafafa;
+      margin-bottom: .75rem;
+    }
+
+    .address-block .address-value { white-space: pre-wrap; }
+
     @media screen { .method-banner { display: none; } }
 
     @media print {
       body { background: white; padding: 0; min-height: 0; display: block; }
-      .card { box-shadow: none; max-width: 100%; }
+      .card { box-shadow: none; max-width: 100%; padding: .5rem; }
       form, .help-btn, .req-note { display: none !important; }
       .summary { margin-top: 0; border: none; background: white; color: black; padding: 0; }
-      .summary h2 { color: black; }
+      .summary h2 { color: black; border-bottom: 1px solid #ccc; padding-bottom: .35rem; margin-bottom: .75rem; }
+      .address-block { background: white; border-color: #aaa; }
+      .summary-label { color: #444; }
       .method-banner {
         border: 4px solid black;
         padding: .75rem 1rem;
@@ -384,12 +399,14 @@
 
     <div class="summary" x-show="submitted" x-cloak>
       <h2>Order Summary</h2>
+      <div class="address-block">
+        <div x-text="submitted?.name"></div>
+        <div class="address-value" x-text="submitted?.address"></div>
+      </div>
       <div class="summary-grid">
         <div class="summary-row"><span class="summary-label">Initials</span>       <span class="summary-value" x-text="submitted?.initials"></span></div>
         <div class="summary-row"><span class="summary-label">Store</span>          <span class="summary-value" x-text="submitted?.store"></span></div>
         <div class="summary-row"><span class="summary-label">Date</span>           <span class="summary-value" x-text="submitted?.date"></span></div>
-        <div class="summary-row"><span class="summary-label">Ship-To Name</span>   <span class="summary-value" x-text="submitted?.name"></span></div>
-        <div class="summary-row"><span class="summary-label">Address</span>        <span class="summary-value" x-text="submitted?.address"></span></div>
         <div class="summary-row" x-show="submitted?.email"><span class="summary-label">Email</span>  <span class="summary-value" x-text="submitted?.email"></span></div>
         <div class="summary-row" x-show="submitted?.phone"><span class="summary-label">Phone</span>  <span class="summary-value" x-text="submitted?.phone"></span></div>
         <div class="summary-row"><span class="summary-label">Weight</span>         <span class="summary-value" x-text="submitted?.weightLbs + ' lbs' + (submitted?.weightOz ? ' ' + submitted?.weightOz + ' oz' : '')"></span></div>
