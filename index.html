@@ -242,7 +242,10 @@
           </div>
           <div style="flex: 1;">
             <label for="date">Date<span class="req">*</span></label>
-            <input id="date" type="date" x-model="form.date" required>
+            <div style="display: flex; gap: .4rem;">
+              <input id="date" type="date" x-model="form.date" required style="flex: 1;">
+              <button type="button" class="help-btn" @click="form.date = new Date().toLocaleDateString('en-CA')" title="Set to today">Today</button>
+            </div>
           </div>
         </div>
       </div>
