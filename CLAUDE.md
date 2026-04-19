@@ -27,7 +27,8 @@ The `form` state object has these keys (in order of appearance):
 | `address` | textarea | yes |
 | `email` | text (customer email) | no |
 | `phone` | tel | no |
-| `weight` | number (kg) | yes |
+| `weightLbs` | number (whole pounds) | yes |
+| `weightOz` | number (ounces, 0–15) | yes |
 | `method` | radio: USPS Media Mail / USPS Ground Advantage / USPS Priority / UPS Ground | yes |
 | `emailTracking` | radio: Yes / No | yes |
 | `specialRequests` | textarea | no |
