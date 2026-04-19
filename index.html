@@ -235,7 +235,7 @@
       this.$nextTick(() => setTimeout(() => window.print(), 50));
     }
   }">
-    <div class="method-banner" x-show="submitted?.method && submitted?.method !== 'USPS Media Mail'" x-text="submitted?.method"></div>
+    <div class="method-banner" x-show="submitted?.method && submitted?.method !== 'USPS Media Mail'" x-text="submitted?.method === 'USPS Priority' ? '⚠️ ' + submitted?.method + ' ⚠️' : submitted?.method"></div>
 
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: .5rem;">
       <h1 style="margin-bottom: 0;">Shipping Form</h1>
