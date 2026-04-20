@@ -215,6 +215,18 @@
 
     .version { color: #9ca3af; }
 
+    .ups-shield {
+      display: inline-block;
+      width: .7em;
+      height: .8em;
+      background: linear-gradient(to bottom, #FFB500 32%, #351C15 32%);
+      clip-path: polygon(0% 0%, 100% 0%, 100% 68%, 50% 100%, 0% 68%);
+      vertical-align: middle;
+      position: relative;
+      top: -.06em;
+      margin-right: .15em;
+    }
+
     @media screen { .method-banner { display: none; } }
     @media screen { .print-date { display: none; } }
     @media screen { .print-meta { display: none; } }
@@ -446,7 +458,7 @@
           <label class="radio-option">
             <input type="radio" x-model="form.method" value="UPS Ground">
             <span class="radio-option-text">
-              <span>UPS Ground</span>
+              <span><span class="ups-shield"></span> UPS Ground</span>
               <small>Delivery in 1–5 business days depending on destination. Reliable for heavier packages.</small>
             </span>
           </label>
