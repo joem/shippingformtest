@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shipping Form</title>
   <script defer src="assets/media_mail.js"></script>
+  <script defer src="assets/usps_zones.js"></script>
+  <script defer src="assets/priority_mail_retail.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -383,11 +385,25 @@
       const rate = getMediaMailRate(lbs + (oz + pkgOz) / 16);
       return rate != null ? '$' + rate.toFixed(2) : '';
     },
+    priorityMailRate() {
+      const lbs = Number(this.form.weightLbs) || 0;
+      const oz = Number(this.form.weightOz) || 0;
+      const pkgOz = Number(this.form.packagingOz) || 0;
+      if (lbs === 0 && oz === 0 && pkgOz === 0) return '';
+      const zipMatch = this.form.address.match(/\b(\d{5})(?:-\d{4})?\b/);
+      if (!zipMatch) return '';
+      const zone = getZone(zipMatch[1]);
+      if (zone === null) return '';
+      const rate = getPriorityMailRetailRate(lbs + (oz + pkgOz) / 16, zone);
+      return rate != null ? '$' + rate.toFixed(2) : '';
+    },
     submit() {
       this.submitAttempted = true;
       if (!this.form.email && !this.form.phone) return;
       if (this.form.emailTracking === 'Yes' && !this.form.email) return;
-      this.submitted = { ...this.form, printTime: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}), mediaMailRate: this.mediaMailRate() };
+      const shippingRate = this.form.method === 'USPS Media Mail' ? this.mediaMailRate() :
+                           this.form.method === 'USPS Priority' ? this.priorityMailRate() : '';
+      this.submitted = { ...this.form, printTime: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}), shippingRate };
       this.$nextTick(() => setTimeout(() => window.print(), 50));
     }
   }">
@@ -522,7 +538,7 @@
           <label class="radio-option">
             <input type="radio" x-model="form.method" value="USPS Priority">
             <span class="radio-option-text">
-              <span><span class="priority-icon"></span> USPS Priority</span>
+              <span><span class="priority-icon"></span> USPS Priority<span class="rate-tag screen-only" x-text="priorityMailRate()"></span></span>
               <small>Faster delivery in 1–3 business days. Includes tracking and insurance.</small>
             </span>
           </label>
@@ -574,7 +590,7 @@
         <div class="summary-row" x-show="submitted?.phone"><span class="summary-label">Phone</span>  <span class="summary-value" x-text="submitted?.phone"></span></div>
         <div class="summary-row"><span class="summary-label">Email Tracking</span> <span class="summary-value" x-text="submitted?.emailTracking"></span></div>
         <div class="summary-row"><span class="summary-label">Weight</span>         <span class="summary-value" x-text="submitted?.weightLbs + ' lbs' + (submitted?.weightOz ? ' ' + submitted?.weightOz + ' oz' : '') + (submitted?.packagingOz ? ' + ' + submitted?.packagingOz + ' oz pkg' : '')"></span></div>
-        <div class="summary-row"><span class="summary-label">Method</span>         <span class="summary-value" x-text="submitted?.method + (submitted?.mediaMailRate ? ' \u2014 ' + submitted?.mediaMailRate : '')"></span></div>
+        <div class="summary-row"><span class="summary-label">Method</span>         <span class="summary-value" x-text="submitted?.method + (submitted?.shippingRate ? ' \u2014 ' + submitted?.shippingRate : '')"></span></div>
         <div class="summary-row"><span class="summary-label">Send Receipt</span>   <span class="summary-value" x-text="submitted?.sendReceipt"></span></div>
         <div class="summary-row notes-row" x-show="submitted?.specialRequests"><span class="summary-label"><span class="label-screen">Special Requests</span><span class="label-print">Notes</span></span> <span class="summary-value" x-text="submitted?.specialRequests"></span></div>
       </div>
