@@ -11,12 +11,14 @@ A single-page employee-facing shipping form for a retail book/media store with m
 All logic, styling, and markup are in one file:
 
 - **Alpine.js** (loaded from jsDelivr CDN) drives reactivity via `x-data`, `x-model`, `x-show`, and `x-text` — no separate JS files.
-- **`assets/media_mail.js`** is loaded via `<script defer>` before the Alpine script tag. It defines the global `mediaMailRates` object and `getMediaMailRate(weightLbs)` function used for rate lookups.
+- **`assets/media_mail.js`**, **`assets/usps_zones.js`**, and **`assets/priority_mail_retail.js`** are each loaded via `<script defer>` before the Alpine script tag. They define the global rate/zone objects and lookup functions (`getMediaMailRate`, `getZone`, `getPriorityMailRetailRate`) used for rate calculations.
+- A small inline `<script>` block (non-deferred, runs at parse time) defines `PRIORITY_MAIL_RATE_MULTIPLIER` (currently `0.77`) — a discount factor applied to the base Priority Mail retail rate. It sits between the asset scripts and the Alpine script tag for easy hand-editing.
 - The `x-data` object on the root `.card` div holds `form` (live input state), `submitted` (snapshot set on submit), `helpOpen` (boolean controlling the Help modal), and `submitAttempted` (boolean set on first print attempt, used to gate the contact-method validation error). Submitting shallow-copies `form` into `submitted`, which makes the summary panel appear via `x-show`.
 - The Print button validates that at least one of `email` or `phone` is filled (custom logic in `submit()`) in addition to the standard HTML5 `required` checks. It also validates that if `emailTracking` is `'Yes'`, `email` must be filled. `submitAttempted` is set to `true` on every submit call so errors only appear after the first attempt.
 - `date` is initialised to today (`new Date().toLocaleDateString('en-CA')`) and reset to today when the Clear button is used.
-- `submitted` receives two extra keys set at submission (not part of `form`): `printTime` (time formatted as `HH:MM AM/PM` via `toLocaleTimeString`) and `mediaMailRate` (the formatted rate string, e.g. `"$4.47"`, or empty string if not applicable).
-- `mediaMailRate()` is a method on the x-data object that converts `form.weightLbs` + `form.weightOz` to decimal pounds and calls `getMediaMailRate()`, returning a formatted string like `"$4.47"` or `""` if no weight is entered or the weight exceeds 70 lbs.
+- `submitted` receives two extra keys set at submission (not part of `form`): `printTime` (time formatted as `HH:MM AM/PM` via `toLocaleTimeString`) and `shippingRate` (the formatted rate string, e.g. `"$4.47"`, or empty string if not applicable). `shippingRate` is populated for USPS Media Mail and USPS Priority only.
+- `mediaMailRate()` is a method on the x-data object that converts `form.weightLbs` + `form.weightOz` + `form.packagingOz` to decimal pounds and calls `getMediaMailRate()`, returning a formatted string like `"$4.47"` or `""` if neither `weightLbs` nor `weightOz` is filled in, or if the weight exceeds 70 lbs.
+- `priorityMailRate()` is a method that uses the same total weight, extracts the last 5-digit ZIP from `form.address` via regex (`matchAll` + last match), calls `getZone()` to determine the USPS zone, then calls `getPriorityMailRetailRate()` and multiplies by `PRIORITY_MAIL_RATE_MULTIPLIER`. Returns `""` if weight, ZIP, or zone is unavailable.
 - `initials` is forced to uppercase on every input event via `@input`.
 - There is no backend, build tool, bundler, package manager, or test suite.
 
@@ -37,6 +39,7 @@ The `form` state object has these keys (in order of appearance):
 | `emailTracking` | radio: Yes / No | yes |
 | `weightLbs` | number (whole pounds) | yes |
 | `weightOz` | number (ounces, 0–15) | only if weightLbs is 0 or empty |
+| `packagingOz` | number (packaging weight in oz, defaults to 6) | no |
 | `method` | radio: USPS Media Mail / USPS Ground Advantage / USPS Priority / UPS Ground | yes |
 | `specialRequests` | textarea (labeled "Notes/Special Requests" in the form, "Notes" in print summary) | no |
 | `sendReceipt` | radio: Yes / No | yes |
@@ -55,11 +58,12 @@ Shipping method icons sit inline before the option label text:
 
 Screen/print visibility helpers:
 
-- **`.screen-only`** — hidden in print via `@media print`. Used for the 📚 emoji on Media Mail and the live `.rate-tag` span in the radio button label.
-- **`.rate-tag`** — styled span (bold, brand blue `#0055a5`) used to display the Media Mail rate inline next to the radio button label on screen. The rate also appears in the print summary via the `submitted.mediaMailRate` snapshot on the Method row.
+- **`.screen-only`** — hidden in print via `@media print`. Used for the 📚 emoji on Media Mail and the live `.rate-tag` spans in the radio button labels.
+- **`.rate-tag`** — styled span (bold, brand blue `#0055a5`) used to display shipping rates inline next to the Media Mail and Priority radio button labels on screen. Rates also appear in the print summary via the `submitted.shippingRate` snapshot on the Method row.
 - **`.label-screen`** / **`.label-print`** — used to show different label text on screen vs. print (e.g. "Special Requests" on screen, "Notes" in print).
+- **`.yes-badge`** — print-only (defined inside `@media print`) border + bold style applied via `:class` binding to the Email Tracking and Send Receipt summary values when their value is `"Yes"`. Uses `justify-self: start` so the border wraps only the word, not the full grid column.
 
-The Help modal uses `.modal-backdrop` (fixed full-screen overlay, closes on outside click) containing `.modal`. It is toggled via `helpOpen`. The modal body currently holds placeholder text to be replaced with real help content later.
+The Help modal uses `.modal-backdrop` (fixed full-screen overlay, closes on outside click) containing `.modal`. It is toggled via `helpOpen`.
 
 ## Print Layout
 
