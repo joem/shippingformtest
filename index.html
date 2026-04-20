@@ -431,8 +431,19 @@
           <button type="button" class="modal-close" @click="helpOpen = false">&times;</button>
         </div>
         <p style="color: #374151; font-size: .95rem; line-height: 1.6;">
-          [Placeholder — help text to be added here. This could include instructions for filling out the form,
-          carrier guidelines, weight limits, packaging requirements, or store-specific notes.]
+        TBD: instructions for filling out the form, carrier guidelines, weight limits, packaging requirements, or store-specific notes<br>
+        <br>
+        ADMIN NOTES FOR UPDATING RATES:<br>
+        <br>
+        The USPS rates come from: <a href="https://pe.usps.com/pricechange/index">https://pe.usps.com/pricechange/index</a><br>
+        (or from <a href="https://pe.usps.com/text/dmm300/Notice123.htm">https://pe.usps.com/text/dmm300/Notice123.htm</a> if you want to copynpaste instead)<br>
+        <br>
+        The USPS zones come from: <a href="https://postcalc.usps.com/domesticzonechart">https://postcalc.usps.com/domesticzonechart</a><br>
+        (but you need to enter the first 3 digits of our zip to generate the data then you need to copy and paste it and clean it up a little)<br>
+        <br>
+        The Priority Mail rate is multiplied by 0.77 to reduce it closer to the discount we usually get from Pirate Ship. This might need to be tweaked next time rates change?<br>
+        <br>
+        The Ground Advantage rate is multiplied by 0.68 to reduce it closer to the discount we usually get from Pirate Ship. This might need to be tweaked next time rates change?
         </p>
       </div>
     </div>
