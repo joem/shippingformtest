@@ -12,8 +12,10 @@ All logic, styling, and markup are in one file:
 
 - **Alpine.js** (loaded from jsDelivr CDN) drives reactivity via `x-data`, `x-model`, `x-show`, and `x-text` — no separate JS files.
 - The `x-data` object on the root `.card` div holds `form` (live input state), `submitted` (snapshot set on submit), `helpOpen` (boolean controlling the Help modal), and `submitAttempted` (boolean set on first print attempt, used to gate the contact-method validation error). Submitting shallow-copies `form` into `submitted`, which makes the summary panel appear via `x-show`.
-- The Print button validates that at least one of `email` or `phone` is filled (custom logic in `submit()`) in addition to the standard HTML5 `required` checks. `submitAttempted` is set to `true` on every submit call so the error only appears after the first attempt.
+- The Print button validates that at least one of `email` or `phone` is filled (custom logic in `submit()`) in addition to the standard HTML5 `required` checks. It also validates that if `emailTracking` is `'Yes'`, `email` must be filled. `submitAttempted` is set to `true` on every submit call so errors only appear after the first attempt.
 - `date` is initialised to today (`new Date().toLocaleDateString('en-CA')`) and reset to today when the Clear button is used.
+- `submitted` receives an extra key `printTime` (set at submission, not part of `form`) holding the time formatted as `HH:MM AM/PM` via `toLocaleTimeString`.
+- `initials` is forced to uppercase on every input event via `@input`.
 - There is no backend, build tool, bundler, package manager, or test suite.
 
 ## Form Fields
@@ -22,13 +24,13 @@ The `form` state object has these keys (in order of appearance):
 
 | Key | Type | Required |
 |-----|------|----------|
-| `initials` | text | yes |
+| `initials` | text (auto-uppercased) | yes |
 | `store` | radio: 112th / Broadway / LIC / Pittsford | yes |
 | `date` | date (auto-filled to today) | yes |
 | `name` | text (ship-to name) | yes |
 | `address` | textarea | yes |
 | `customerName` | text (customer name) | yes |
-| `email` | text (customer email) | at least one of email/phone |
+| `email` | text (customer email) | at least one of email/phone; required if emailTracking is Yes |
 | `phone` | tel | at least one of email/phone |
 | `weightLbs` | number (whole pounds) | yes |
 | `weightOz` | number (ounces, 0–15) | only if weightLbs is 0 or empty |
@@ -44,6 +46,16 @@ Two radio button layouts are used:
 - **`.radio-group`** — horizontal flex row, used for short single-word options (Store, Email tracking?, Send receipt?).
 - **`.radio-option` + `.radio-option-text`** — vertical stacked layout with a bold label `<span>` and a `<small>` description line, used for Shipping Method where each option has a description.
 
+Shipping method icons sit inline before the option label text:
+
+- **`.priority-icon`** — small CSS rectangle (blue `#004B87` with red `#C8102E` bottom band) next to USPS Priority.
+- **`.ups-shield`** — CSS `clip-path` shield (gold `#FFB500` top band, UPS brown `#351C15` body) next to UPS Ground.
+
+Screen/print visibility helpers:
+
+- **`.screen-only`** — hidden in print via `@media print`. Used for the 📚 emoji on Media Mail.
+- **`.label-screen`** / **`.label-print`** — used to show different label text on screen vs. print (e.g. "Special Requests" on screen, "Notes" in print).
+
 The Help modal uses `.modal-backdrop` (fixed full-screen overlay, closes on outside click) containing `.modal`. It is toggled via `helpOpen`. The modal body currently holds placeholder text to be replaced with real help content later.
 
 ## Print Layout
@@ -54,9 +66,10 @@ Print-specific CSS (`@media print`) hides the form, Help/Clear buttons, and requ
 
 - **`.method-banner`** — large bold all-caps banner at the very top, shown for all methods except USPS Media Mail. USPS Priority adds ⚠️ before and after the method name. Hidden on screen via `@media screen`.
 - **`.print-meta`** — one line showing initials and store (e.g. `AB — 112th`), shown above the address block. Hidden on screen.
-- **`.print-date`** — date shown right-aligned in the header next to "Shipping Form". Hidden on screen.
+- **`.print-date`** — date and time (`submitted.printTime`) shown right-aligned in the header next to "Shipping Form". Hidden on screen.
 - **`.address-block`** — name and address displayed together as a package-label block, using a disambiguating monospace font stack (`Consolas, Menlo, Monaco, 'Lucida Console', 'Courier New', monospace`) with `white-space: pre-wrap` to preserve address line breaks.
 - **`.mono-value`** — applied to the email value in the summary; uses the same monospace font stack in print.
+- **`.notes-row`** — the Special Requests row. In print it breaks out of the two-column grid (`display: block; grid-column: 1 / -1`), renders with a top border separator, its label swapped to "Notes" via `.label-print`, and its value in italic with `white-space: pre-wrap`.
 
 The Initials, Store, and Date rows are hidden in the print summary grid (`.initials-row`, `.store-row`, `.date-row`) since they appear elsewhere in the print layout.
 
