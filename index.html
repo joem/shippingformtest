@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shipping Form</title>
+  <script defer src="assets/media_mail.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -247,6 +248,7 @@
     @media screen { .label-print { display: none; } }
     @media print  { .label-screen { display: none; } }
     @media print  { .screen-only { display: none; } }
+    .rate-tag { font-weight: 600; color: #0055a5; font-size: .88em; margin-left: .3rem; }
 
     @media print {
       body { background: white; padding: 0; min-height: 0; display: block; font-size: .9rem; }
@@ -373,6 +375,13 @@
     submitted: null,
     submitAttempted: false,
     helpOpen: false,
+    mediaMailRate() {
+      const lbs = Number(this.form.weightLbs) || 0;
+      const oz = Number(this.form.weightOz) || 0;
+      if (lbs === 0 && oz === 0) return '';
+      const rate = getMediaMailRate(lbs + oz / 16);
+      return rate != null ? '$' + rate.toFixed(2) : '';
+    },
     submit() {
       this.submitAttempted = true;
       if (!this.form.email && !this.form.phone) return;
@@ -493,7 +502,7 @@
           <label class="radio-option">
             <input type="radio" x-model="form.method" value="USPS Media Mail" required>
             <span class="radio-option-text">
-              <span>USPS Media Mail <span class="screen-only">📚</span></span>
+              <span>USPS Media Mail <span class="screen-only">📚</span><span class="rate-tag screen-only" x-text="mediaMailRate()"></span></span>
               <small>Books, DVDs, CDs, and other approved media only. Not for general merchandise.</small>
             </span>
           </label>
