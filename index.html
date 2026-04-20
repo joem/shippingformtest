@@ -244,6 +244,7 @@
     @media screen { .print-meta { display: none; } }
     @media screen { .label-print { display: none; } }
     @media print  { .label-screen { display: none; } }
+    @media print  { .screen-only { display: none; } }
 
     @media print {
       body { background: white; padding: 0; min-height: 0; display: block; font-size: .9rem; }
@@ -449,7 +450,7 @@
           <label class="radio-option">
             <input type="radio" x-model="form.method" value="USPS Media Mail" required>
             <span class="radio-option-text">
-              <span>USPS Media Mail</span>
+              <span>USPS Media Mail <span class="screen-only">📚</span></span>
               <small>Books, DVDs, CDs, and other approved media only. Not for general merchandise.</small>
             </span>
           </label>
