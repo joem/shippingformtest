@@ -367,7 +367,7 @@
 <body>
   <div class="card" x-data="{
     form: {
-      name: '', address: '', weightLbs: '', weightOz: '', method: '',
+      name: '', address: '', weightLbs: '', weightOz: '', packagingOz: '', method: '',
       initials: '', store: '', date: new Date().toLocaleDateString('en-CA'),
       email: '', phone: '', emailTracking: '',
       specialRequests: '', sendReceipt: '', customerName: ''
@@ -378,8 +378,9 @@
     mediaMailRate() {
       const lbs = Number(this.form.weightLbs) || 0;
       const oz = Number(this.form.weightOz) || 0;
-      if (lbs === 0 && oz === 0) return '';
-      const rate = getMediaMailRate(lbs + oz / 16);
+      const pkgOz = Number(this.form.packagingOz) || 0;
+      if (lbs === 0 && oz === 0 && pkgOz === 0) return '';
+      const rate = getMediaMailRate(lbs + (oz + pkgOz) / 16);
       return rate != null ? '$' + rate.toFixed(2) : '';
     },
     submit() {
@@ -397,7 +398,7 @@
       <span class="print-date" x-text="submitted?.date + ' \u2013 ' + submitted?.printTime"></span>
       <div style="display: flex; gap: .5rem;">
         <button type="button" class="help-btn" @click="helpOpen = true">Help</button>
-        <button type="button" class="help-btn" style="color: #dc2626; border-color: #fca5a5;" @click="form = { name: '', address: '', weightLbs: '', weightOz: '', method: '', initials: '', store: '', date: new Date().toLocaleDateString('en-CA'), email: '', phone: '', emailTracking: '', specialRequests: '', sendReceipt: '', customerName: '' }; submitted = null; submitAttempted = false;">Clear</button>
+        <button type="button" class="help-btn" style="color: #dc2626; border-color: #fca5a5;" @click="form = { name: '', address: '', weightLbs: '', weightOz: '', packagingOz: '', method: '', initials: '', store: '', date: new Date().toLocaleDateString('en-CA'), email: '', phone: '', emailTracking: '', specialRequests: '', sendReceipt: '', customerName: '' }; submitted = null; submitAttempted = false;">Clear</button>
       </div>
     </div>
     <p class="req-note" style="font-size: .8rem; color: #6b7280; margin-bottom: 1.2rem;"><span class="req">*</span> Required</p>
@@ -490,8 +491,12 @@
             <input id="weightOz" type="number" x-model="form.weightOz" placeholder="0" min="0" max="15" step="1" :required="Number(form.weightLbs) === 0 || form.weightLbs === ''" style="text-align: right;">
             <label for="weightOz" style="font-weight: 400; font-size: .8rem; color: #6b7280; margin-top: .2rem;">oz</label>
           </div>
+          <div style="flex: 1;">
+            <input id="packagingOz" type="number" x-model="form.packagingOz" placeholder="0" min="0" step="1" style="text-align: right;">
+            <label for="packagingOz" style="font-weight: 400; font-size: .8rem; color: #6b7280; margin-top: .2rem;">packaging (oz)</label>
+          </div>
         </div>
-        <p x-show="Number(form.weightLbs) > 70 || (Number(form.weightLbs) === 70 && Number(form.weightOz) > 0)" style="margin-top: .5rem; font-size: .85rem; color: #b45309; background: #fffbeb; border: 1px solid #fcd34d; border-radius: 5px; padding: .4rem .65rem;">
+        <p x-show="Number(form.weightLbs) + (Number(form.weightOz) + Number(form.packagingOz)) / 16 > 70" style="margin-top: .5rem; font-size: .85rem; color: #b45309; background: #fffbeb; border: 1px solid #fcd34d; border-radius: 5px; padding: .4rem .65rem;">
           &#9888; Weight exceeds 70 lbs — most carriers will not accept this package.
         </p>
       </div>
@@ -567,7 +572,7 @@
         <div class="summary-row" x-show="submitted?.email"><span class="summary-label">Email</span>  <span class="summary-value mono-value" x-text="submitted?.email"></span></div>
         <div class="summary-row" x-show="submitted?.phone"><span class="summary-label">Phone</span>  <span class="summary-value" x-text="submitted?.phone"></span></div>
         <div class="summary-row"><span class="summary-label">Email Tracking</span> <span class="summary-value" x-text="submitted?.emailTracking"></span></div>
-        <div class="summary-row"><span class="summary-label">Weight</span>         <span class="summary-value" x-text="submitted?.weightLbs + ' lbs' + (submitted?.weightOz ? ' ' + submitted?.weightOz + ' oz' : '')"></span></div>
+        <div class="summary-row"><span class="summary-label">Weight</span>         <span class="summary-value" x-text="submitted?.weightLbs + ' lbs' + (submitted?.weightOz ? ' ' + submitted?.weightOz + ' oz' : '') + (submitted?.packagingOz ? ' + ' + submitted?.packagingOz + ' oz pkg' : '')"></span></div>
         <div class="summary-row"><span class="summary-label">Method</span>         <span class="summary-value" x-text="submitted?.method + (submitted?.mediaMailRate ? ' \u2014 ' + submitted?.mediaMailRate : '')"></span></div>
         <div class="summary-row"><span class="summary-label">Send Receipt</span>   <span class="summary-value" x-text="submitted?.sendReceipt"></span></div>
         <div class="summary-row notes-row" x-show="submitted?.specialRequests"><span class="summary-label"><span class="label-screen">Special Requests</span><span class="label-print">Notes</span></span> <span class="summary-value" x-text="submitted?.specialRequests"></span></div>
