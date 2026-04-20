@@ -216,6 +216,8 @@
     @media screen { .method-banner { display: none; } }
     @media screen { .print-date { display: none; } }
     @media screen { .print-meta { display: none; } }
+    @media screen { .label-print { display: none; } }
+    @media print  { .label-screen { display: none; } }
 
     @media print {
       body { background: white; padding: 0; min-height: 0; display: block; font-size: .9rem; }
@@ -254,6 +256,28 @@
         border-bottom: 1px solid #e8e8e8;
       }
       .mono-value { font-family: Consolas, Menlo, Monaco, 'Lucida Console', 'Courier New', monospace; }
+
+      /* Notes row — full-width standout block */
+      .notes-row {
+        display: block;
+        grid-column: 1 / -1;
+        border-top: 1.5px solid #aaa;
+        margin-top: .5rem;
+        padding-top: .5rem;
+      }
+      .notes-row .summary-label {
+        display: block;
+        border-bottom: none;
+        padding-bottom: .15rem;
+      }
+      .notes-row .summary-value {
+        display: block;
+        font-style: italic;
+        font-size: .95rem;
+        border-bottom: none;
+        padding: 0;
+        white-space: pre-wrap;
+      }
 
       /* Method banner */
       .method-banner {
@@ -459,10 +483,10 @@
         <div class="summary-row"><span class="summary-label">Customer Name</span> <span class="summary-value" x-text="submitted?.customerName"></span></div>
         <div class="summary-row" x-show="submitted?.email"><span class="summary-label">Email</span>  <span class="summary-value mono-value" x-text="submitted?.email"></span></div>
         <div class="summary-row" x-show="submitted?.phone"><span class="summary-label">Phone</span>  <span class="summary-value" x-text="submitted?.phone"></span></div>
+        <div class="summary-row"><span class="summary-label">Email Tracking</span> <span class="summary-value" x-text="submitted?.emailTracking"></span></div>
         <div class="summary-row"><span class="summary-label">Weight</span>         <span class="summary-value" x-text="submitted?.weightLbs + ' lbs' + (submitted?.weightOz ? ' ' + submitted?.weightOz + ' oz' : '')"></span></div>
         <div class="summary-row"><span class="summary-label">Method</span>         <span class="summary-value" x-text="submitted?.method"></span></div>
-        <div class="summary-row"><span class="summary-label">Email Tracking</span> <span class="summary-value" x-text="submitted?.emailTracking"></span></div>
-        <div class="summary-row" x-show="submitted?.specialRequests"><span class="summary-label">Special Requests</span> <span class="summary-value" x-text="submitted?.specialRequests"></span></div>
+        <div class="summary-row notes-row" x-show="submitted?.specialRequests"><span class="summary-label"><span class="label-screen">Special Requests</span><span class="label-print">Notes</span></span> <span class="summary-value" x-text="submitted?.specialRequests"></span></div>
         <div class="summary-row"><span class="summary-label">Send Receipt</span>   <span class="summary-value" x-text="submitted?.sendReceipt"></span></div>
       </div>
     </div>
