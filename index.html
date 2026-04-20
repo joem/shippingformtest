@@ -386,7 +386,7 @@
       this.submitAttempted = true;
       if (!this.form.email && !this.form.phone) return;
       if (this.form.emailTracking === 'Yes' && !this.form.email) return;
-      this.submitted = { ...this.form, printTime: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}) };
+      this.submitted = { ...this.form, printTime: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}), mediaMailRate: this.mediaMailRate() };
       this.$nextTick(() => setTimeout(() => window.print(), 50));
     }
   }">
@@ -568,7 +568,7 @@
         <div class="summary-row" x-show="submitted?.phone"><span class="summary-label">Phone</span>  <span class="summary-value" x-text="submitted?.phone"></span></div>
         <div class="summary-row"><span class="summary-label">Email Tracking</span> <span class="summary-value" x-text="submitted?.emailTracking"></span></div>
         <div class="summary-row"><span class="summary-label">Weight</span>         <span class="summary-value" x-text="submitted?.weightLbs + ' lbs' + (submitted?.weightOz ? ' ' + submitted?.weightOz + ' oz' : '')"></span></div>
-        <div class="summary-row"><span class="summary-label">Method</span>         <span class="summary-value" x-text="submitted?.method"></span></div>
+        <div class="summary-row"><span class="summary-label">Method</span>         <span class="summary-value" x-text="submitted?.method + (submitted?.mediaMailRate ? ' \u2014 ' + submitted?.mediaMailRate : '')"></span></div>
         <div class="summary-row"><span class="summary-label">Send Receipt</span>   <span class="summary-value" x-text="submitted?.sendReceipt"></span></div>
         <div class="summary-row notes-row" x-show="submitted?.specialRequests"><span class="summary-label"><span class="label-screen">Special Requests</span><span class="label-print">Notes</span></span> <span class="summary-value" x-text="submitted?.specialRequests"></span></div>
       </div>
