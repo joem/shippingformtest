@@ -7,6 +7,10 @@
   <script defer src="assets/media_mail.js"></script>
   <script defer src="assets/usps_zones.js"></script>
   <script defer src="assets/priority_mail_retail.js"></script>
+  <script>
+    // Multiplier applied to the base Priority Mail retail rate (e.g. 0.77 = 23% discount)
+    const PRIORITY_MAIL_RATE_MULTIPLIER = 0.77;
+  </script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -395,7 +399,7 @@
       const zone = getZone(zipMatch[1]);
       if (zone === null) return '';
       const rate = getPriorityMailRetailRate(lbs + (oz + pkgOz) / 16, zone);
-      return rate != null ? '$' + rate.toFixed(2) : '';
+      return rate != null ? '$' + (rate * PRIORITY_MAIL_RATE_MULTIPLIER).toFixed(2) : '';
     },
     submit() {
       this.submitAttempted = true;
