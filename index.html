@@ -242,6 +242,7 @@
     @media screen { .method-banner { display: none; } }
     @media screen { .print-date { display: none; } }
     @media screen { .print-meta { display: none; } }
+    @media screen { .receipt-row { display: none; } }
     @media screen { .label-print { display: none; } }
     @media print  { .label-screen { display: none; } }
     @media print  { .screen-only { display: none; } }
@@ -269,6 +270,19 @@
       .summary h2 { display: none; }
       .date-row, .initials-row, .store-row { display: none; }
       .summary-grid { gap: 0 1rem; }
+      .receipt-row {
+        display: contents;
+      }
+      .receipt-row .summary-label {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+      .receipt-row .receipt-line {
+        border-bottom: 1.5px solid black;
+        min-width: 8rem;
+        padding-bottom: 0;
+      }
+
       .summary-label {
         font-size: .72rem;
         font-weight: 700;
@@ -507,6 +521,7 @@
         <div class="address-value" x-text="submitted?.address"></div>
       </div>
       <div class="summary-grid">
+        <div class="receipt-row"><span class="summary-label">Receipt #</span><span class="receipt-line"></span></div>
         <div class="summary-row initials-row"><span class="summary-label">Initials</span>       <span class="summary-value" x-text="submitted?.initials"></span></div>
         <div class="summary-row store-row"><span class="summary-label">Store</span>          <span class="summary-value" x-text="submitted?.store"></span></div>
         <div class="summary-row date-row"><span class="summary-label">Date</span>           <span class="summary-value" x-text="submitted?.date"></span></div>
