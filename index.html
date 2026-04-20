@@ -394,9 +394,9 @@
       const oz = Number(this.form.weightOz) || 0;
       const pkgOz = Number(this.form.packagingOz) || 0;
       if (lbs === 0 && oz === 0 && pkgOz === 0) return '';
-      const zipMatch = this.form.address.match(/\b(\d{5})(?:-\d{4})?\b/);
-      if (!zipMatch) return '';
-      const zone = getZone(zipMatch[1]);
+      const zipMatches = [...this.form.address.matchAll(/\b(\d{5})(?:-\d{4})?\b/g)];
+      if (!zipMatches.length) return '';
+      const zone = getZone(zipMatches[zipMatches.length - 1][1]);
       if (zone === null) return '';
       const rate = getPriorityMailRetailRate(lbs + (oz + pkgOz) / 16, zone);
       return rate != null ? '$' + (rate * PRIORITY_MAIL_RATE_MULTIPLIER).toFixed(2) : '';
