@@ -32,11 +32,11 @@ The `form` state object has these keys (in order of appearance):
 | `customerName` | text (customer name) | yes |
 | `email` | text (customer email) | at least one of email/phone; required if emailTracking is Yes |
 | `phone` | tel | at least one of email/phone |
+| `emailTracking` | radio: Yes / No | yes |
 | `weightLbs` | number (whole pounds) | yes |
 | `weightOz` | number (ounces, 0–15) | only if weightLbs is 0 or empty |
 | `method` | radio: USPS Media Mail / USPS Ground Advantage / USPS Priority / UPS Ground | yes |
-| `emailTracking` | radio: Yes / No | yes |
-| `specialRequests` | textarea | no |
+| `specialRequests` | textarea (labeled "Notes/Special Requests" in the form, "Notes" in print summary) | no |
 | `sendReceipt` | radio: Yes / No | yes |
 
 ## CSS Patterns
@@ -65,13 +65,15 @@ The Print button (`@submit.prevent`) snapshots the form, then calls `window.prin
 Print-specific CSS (`@media print`) hides the form, Help/Clear buttons, and required legend, and shows several print-only elements:
 
 - **`.method-banner`** — large bold all-caps banner at the very top, shown for all methods except USPS Media Mail. USPS Priority adds ⚠️ before and after the method name. Hidden on screen via `@media screen`.
-- **`.print-meta`** — one line showing initials and store (e.g. `AB — 112th`), shown above the address block. Hidden on screen.
+- **`.print-meta`** — flex row shown above the address block, hidden on screen. Left side shows initials and store (e.g. `AB — 112th`); right side shows a `.receipt-field` write-in area ("Receipt #" label + `.receipt-line` underline) to be filled in by pen.
 - **`.print-date`** — date and time (`submitted.printTime`) shown right-aligned in the header next to "Shipping Form". Hidden on screen.
 - **`.address-block`** — name and address displayed together as a package-label block, using a disambiguating monospace font stack (`Consolas, Menlo, Monaco, 'Lucida Console', 'Courier New', monospace`) with `white-space: pre-wrap` to preserve address line breaks.
 - **`.mono-value`** — applied to the email value in the summary; uses the same monospace font stack in print.
 - **`.notes-row`** — the Special Requests row. In print it breaks out of the two-column grid (`display: block; grid-column: 1 / -1`), renders with a top border separator, its label swapped to "Notes" via `.label-print`, and its value in italic with `white-space: pre-wrap`.
 
 The Initials, Store, and Date rows are hidden in the print summary grid (`.initials-row`, `.store-row`, `.date-row`) since they appear elsewhere in the print layout.
+
+Below the summary grid, a **`.shipper-box`** (dashed border, `@media screen` hidden) provides write-in fields for the person who processes the shipment: Tracking # (full-width), and Shipping Date + Shipper Initials side-by-side in a flex row. The box is labelled "For shipper use only" via `.shipper-box-title`. Each field uses `.shipper-label` + `.shipper-line` (a flex-grow underline).
 
 ## Version Number
 
