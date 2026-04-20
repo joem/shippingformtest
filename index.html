@@ -7,9 +7,12 @@
   <script defer src="assets/media_mail.js"></script>
   <script defer src="assets/usps_zones.js"></script>
   <script defer src="assets/priority_mail_retail.js"></script>
+  <script defer src="assets/usps_ground_advantage.js"></script>
   <script>
     // Multiplier applied to the base Priority Mail retail rate (e.g. 0.77 = 23% discount)
     const PRIORITY_MAIL_RATE_MULTIPLIER = 0.77;
+    // Multiplier applied to the base USPS Ground Advantage retail rate (e.g. 0.68 = 32% discount)
+    const GROUND_ADVANTAGE_RATE_MULTIPLIER = 0.68;
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <style>
@@ -404,12 +407,25 @@
       const rate = getPriorityMailRetailRate(lbs + (oz + pkgOz) / 16, zone);
       return rate != null ? '$' + (rate * PRIORITY_MAIL_RATE_MULTIPLIER).toFixed(2) : '';
     },
+    groundAdvantageRate() {
+      const lbs = Number(this.form.weightLbs) || 0;
+      const oz = Number(this.form.weightOz) || 0;
+      const pkgOz = Number(this.form.packagingOz) || 0;
+      if (!this.form.weightLbs && !this.form.weightOz) return '';
+      const zipMatches = [...this.form.address.matchAll(/\b(\d{5})(?:-\d{4})?\b/g)];
+      if (!zipMatches.length) return '';
+      const zone = getZone(zipMatches[zipMatches.length - 1][1]);
+      if (zone === null) return '';
+      const rate = getUspsGroundAdvantageRate(lbs + (oz + pkgOz) / 16, zone);
+      return rate != null ? '$' + (rate * GROUND_ADVANTAGE_RATE_MULTIPLIER).toFixed(2) : '';
+    },
     submit() {
       this.submitAttempted = true;
       if (!this.form.email && !this.form.phone) return;
       if (this.form.emailTracking === 'Yes' && !this.form.email) return;
       const shippingRate = this.form.method === 'USPS Media Mail' ? this.mediaMailRate() :
-                           this.form.method === 'USPS Priority' ? this.priorityMailRate() : '';
+                           this.form.method === 'USPS Priority' ? this.priorityMailRate() :
+                           this.form.method === 'USPS Ground Advantage' ? this.groundAdvantageRate() : '';
       this.submitted = { ...this.form, printTime: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}), shippingRate };
       this.$nextTick(() => setTimeout(() => window.print(), 50));
     }
@@ -549,7 +565,7 @@
           <label class="radio-option">
             <input type="radio" x-model="form.method" value="USPS Ground Advantage">
             <span class="radio-option-text">
-              <span>USPS Ground Advantage</span>
+              <span>USPS Ground Advantage<span class="rate-tag screen-only" x-text="groundAdvantageRate()"></span></span>
               <small>Reliable ground delivery in 2–5 business days. Good for most packages.</small>
             </span>
           </label>
