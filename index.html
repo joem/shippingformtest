@@ -296,6 +296,7 @@
         border-bottom: 1px solid #e8e8e8;
       }
       .mono-value { font-family: Consolas, Menlo, Monaco, 'Lucida Console', 'Courier New', monospace; }
+      .yes-badge { border: 1.5px solid black; padding: .1rem .4rem; border-radius: 3px; font-weight: 700; }
 
       /* Notes row — full-width standout block */
       .notes-row {
@@ -592,10 +593,10 @@
         <div class="summary-row"><span class="summary-label">Customer Name</span> <span class="summary-value" x-text="submitted?.customerName"></span></div>
         <div class="summary-row" x-show="submitted?.email"><span class="summary-label">Email</span>  <span class="summary-value mono-value" x-text="submitted?.email"></span></div>
         <div class="summary-row" x-show="submitted?.phone"><span class="summary-label">Phone</span>  <span class="summary-value" x-text="submitted?.phone"></span></div>
-        <div class="summary-row"><span class="summary-label">Email Tracking</span> <span class="summary-value" x-text="submitted?.emailTracking"></span></div>
+        <div class="summary-row"><span class="summary-label">Email Tracking</span> <span class="summary-value" :class="submitted?.emailTracking === 'Yes' ? 'yes-badge' : ''" x-text="submitted?.emailTracking"></span></div>
         <div class="summary-row"><span class="summary-label">Weight</span>         <span class="summary-value" x-text="submitted?.weightLbs + ' lbs' + (submitted?.weightOz ? ' ' + submitted?.weightOz + ' oz' : '') + (submitted?.packagingOz ? ' + ' + submitted?.packagingOz + ' oz pkg' : '')"></span></div>
         <div class="summary-row"><span class="summary-label">Method</span>         <span class="summary-value" x-text="submitted?.method + (submitted?.shippingRate ? ' \u2014 ' + submitted?.shippingRate : '')"></span></div>
-        <div class="summary-row"><span class="summary-label">Send Receipt</span>   <span class="summary-value" x-text="submitted?.sendReceipt"></span></div>
+        <div class="summary-row"><span class="summary-label">Send Receipt</span>   <span class="summary-value" :class="submitted?.sendReceipt === 'Yes' ? 'yes-badge' : ''" x-text="submitted?.sendReceipt"></span></div>
         <div class="summary-row notes-row" x-show="submitted?.specialRequests"><span class="summary-label"><span class="label-screen">Special Requests</span><span class="label-print">Notes</span></span> <span class="summary-value" x-text="submitted?.specialRequests"></span></div>
       </div>
       <div class="shipper-box">
