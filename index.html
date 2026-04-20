@@ -335,6 +335,7 @@
     submit() {
       this.submitAttempted = true;
       if (!this.form.email && !this.form.phone) return;
+      if (this.form.emailTracking === 'Yes' && !this.form.email) return;
       this.submitted = { ...this.form, printTime: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}) };
       this.$nextTick(() => setTimeout(() => window.print(), 50));
     }
@@ -425,6 +426,7 @@
           <label><input type="radio" x-model="form.emailTracking" value="Yes" required> Yes</label>
           <label><input type="radio" x-model="form.emailTracking" value="No"> No</label>
         </div>
+        <p x-show="submitAttempted && form.emailTracking === 'Yes' && !form.email" style="color: #dc2626; font-size: .825rem; margin-top: .35rem;">An email address is required when Email Tracking is Yes.</p>
       </div>
 
       <div class="field">
