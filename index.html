@@ -385,7 +385,7 @@
       const lbs = Number(this.form.weightLbs) || 0;
       const oz = Number(this.form.weightOz) || 0;
       const pkgOz = Number(this.form.packagingOz) || 0;
-      if (lbs === 0 && oz === 0 && pkgOz === 0) return '';
+      if (!this.form.weightLbs && !this.form.weightOz) return '';
       const rate = getMediaMailRate(lbs + (oz + pkgOz) / 16);
       return rate != null ? '$' + rate.toFixed(2) : '';
     },
@@ -393,7 +393,7 @@
       const lbs = Number(this.form.weightLbs) || 0;
       const oz = Number(this.form.weightOz) || 0;
       const pkgOz = Number(this.form.packagingOz) || 0;
-      if (lbs === 0 && oz === 0 && pkgOz === 0) return '';
+      if (!this.form.weightLbs && !this.form.weightOz) return '';
       const zipMatches = [...this.form.address.matchAll(/\b(\d{5})(?:-\d{4})?\b/g)];
       if (!zipMatches.length) return '';
       const zone = getZone(zipMatches[zipMatches.length - 1][1]);
