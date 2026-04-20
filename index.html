@@ -243,6 +243,7 @@
     @media screen { .print-date { display: none; } }
     @media screen { .print-meta { display: none; } }
     @media screen { .receipt-field { display: none; } }
+    @media screen { .shipper-box { display: none; } }
     @media screen { .label-print { display: none; } }
     @media print  { .label-screen { display: none; } }
     @media print  { .screen-only { display: none; } }
@@ -308,6 +309,43 @@
         border-bottom: none;
         padding: 0;
         white-space: pre-wrap;
+      }
+
+      /* Shipper box */
+      .shipper-box {
+        border: 1.5px dashed #888;
+        border-radius: 4px;
+        padding: .55rem .75rem .6rem;
+        margin-top: 1rem;
+      }
+      .shipper-box-title {
+        font-size: .65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        color: #666;
+        margin-bottom: .5rem;
+      }
+      .shipper-field {
+        display: flex;
+        align-items: baseline;
+        gap: .4rem;
+        margin-bottom: .45rem;
+      }
+      .shipper-field:last-child { margin-bottom: 0; }
+      .shipper-label {
+        font-size: .72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        color: #555;
+        white-space: nowrap;
+        min-width: 7.5rem;
+      }
+      .shipper-line {
+        flex: 1;
+        border-bottom: 1.5px solid black;
+        display: inline-block;
       }
 
       /* Method banner */
@@ -524,6 +562,21 @@
         <div class="summary-row"><span class="summary-label">Method</span>         <span class="summary-value" x-text="submitted?.method"></span></div>
         <div class="summary-row"><span class="summary-label">Send Receipt</span>   <span class="summary-value" x-text="submitted?.sendReceipt"></span></div>
         <div class="summary-row notes-row" x-show="submitted?.specialRequests"><span class="summary-label"><span class="label-screen">Special Requests</span><span class="label-print">Notes</span></span> <span class="summary-value" x-text="submitted?.specialRequests"></span></div>
+      </div>
+      <div class="shipper-box">
+        <p class="shipper-box-title">For shipper use only</p>
+        <div class="shipper-field">
+          <span class="shipper-label">Tracking #</span>
+          <span class="shipper-line"></span>
+        </div>
+        <div class="shipper-field">
+          <span class="shipper-label">Shipper Initials</span>
+          <span class="shipper-line"></span>
+        </div>
+        <div class="shipper-field">
+          <span class="shipper-label">Shipping Date</span>
+          <span class="shipper-line"></span>
+        </div>
       </div>
     </div>
   </div>
