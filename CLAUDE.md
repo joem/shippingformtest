@@ -60,6 +60,10 @@ Print-specific CSS (`@media print`) hides the form, Help/Clear buttons, and requ
 
 The Initials, Store, and Date rows are hidden in the print summary grid (`.initials-row`, `.store-row`, `.date-row`) since they appear elsewhere in the print layout.
 
+## Version Number
+
+The version string in the `<span class="version">` inside the `<h1>` must be updated to `vYYYY.MM.DD` (e.g. `v2026.04.20`) whenever Claude resumes work on this project. Do this as the first change of each session before committing anything else.
+
 ## Development
 
 Open `index.html` directly in a browser — no server needed. Alpine.js requires an internet connection (CDN).
