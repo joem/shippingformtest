@@ -11,14 +11,15 @@ A single-page employee-facing shipping form for a retail book/media store with m
 All logic, styling, and markup are in one file:
 
 - **Alpine.js** (loaded from jsDelivr CDN) drives reactivity via `x-data`, `x-model`, `x-show`, and `x-text` — no separate JS files.
-- **`assets/media_mail.js`**, **`assets/usps_zones.js`**, and **`assets/priority_mail_retail.js`** are each loaded via `<script defer>` before the Alpine script tag. They define the global rate/zone objects and lookup functions (`getMediaMailRate`, `getZone`, `getPriorityMailRetailRate`) used for rate calculations.
-- A small inline `<script>` block (non-deferred, runs at parse time) defines `PRIORITY_MAIL_RATE_MULTIPLIER` (currently `0.77`) — a discount factor applied to the base Priority Mail retail rate. It sits between the asset scripts and the Alpine script tag for easy hand-editing.
+- **`assets/media_mail.js`**, **`assets/usps_zones.js`**, **`assets/priority_mail_retail.js`**, and **`assets/usps_ground_advantage.js`** are each loaded via `<script defer>` before the Alpine script tag. They define the global rate/zone objects and lookup functions (`getMediaMailRate`, `getZone`, `getPriorityMailRetailRate`, `getUspsGroundAdvantageRate`) used for rate calculations.
+- A small inline `<script>` block (non-deferred, runs at parse time) defines `PRIORITY_MAIL_RATE_MULTIPLIER` (currently `0.77`) — a discount factor applied to the base Priority Mail retail rate — and `GROUND_ADVANTAGE_RATE_MULTIPLIER` (currently `0.68`) — a discount factor applied to the base Ground Advantage retail rate. It sits between the asset scripts and the Alpine script tag for easy hand-editing.
 - The `x-data` object on the root `.card` div holds `form` (live input state), `submitted` (snapshot set on submit), `helpOpen` (boolean controlling the Help modal), and `submitAttempted` (boolean set on first print attempt, used to gate the contact-method validation error). Submitting shallow-copies `form` into `submitted`, which makes the summary panel appear via `x-show`.
 - The Print button validates that at least one of `email` or `phone` is filled (custom logic in `submit()`) in addition to the standard HTML5 `required` checks. It also validates that if `emailTracking` is `'Yes'`, `email` must be filled. `submitAttempted` is set to `true` on every submit call so errors only appear after the first attempt.
 - `date` is initialised to today (`new Date().toLocaleDateString('en-CA')`) and reset to today when the Clear button is used.
-- `submitted` receives two extra keys set at submission (not part of `form`): `printTime` (time formatted as `HH:MM AM/PM` via `toLocaleTimeString`) and `shippingRate` (the formatted rate string, e.g. `"$4.47"`, or empty string if not applicable). `shippingRate` is populated for USPS Media Mail and USPS Priority only.
+- `submitted` receives two extra keys set at submission (not part of `form`): `printTime` (time formatted as `HH:MM AM/PM` via `toLocaleTimeString`) and `shippingRate` (the formatted rate string, e.g. `"$4.47"`, or empty string if not applicable). `shippingRate` is populated for USPS Media Mail, USPS Ground Advantage, and USPS Priority only.
 - `mediaMailRate()` is a method on the x-data object that converts `form.weightLbs` + `form.weightOz` + `form.packagingOz` to decimal pounds and calls `getMediaMailRate()`, returning a formatted string like `"$4.47"` or `""` if neither `weightLbs` nor `weightOz` is filled in, or if the weight exceeds 70 lbs.
 - `priorityMailRate()` is a method that uses the same total weight, extracts the last 5-digit ZIP from `form.address` via regex (`matchAll` + last match), calls `getZone()` to determine the USPS zone, then calls `getPriorityMailRetailRate()` and multiplies by `PRIORITY_MAIL_RATE_MULTIPLIER`. Returns `""` if weight, ZIP, or zone is unavailable.
+- `groundAdvantageRate()` is a method that follows the same pattern as `priorityMailRate()` — same weight/ZIP/zone logic — but calls `getUspsGroundAdvantageRate()` and multiplies by `GROUND_ADVANTAGE_RATE_MULTIPLIER`.
 - `initials` is forced to uppercase on every input event via `@input`.
 - There is no backend, build tool, bundler, package manager, or test suite.
 
@@ -59,7 +60,7 @@ Shipping method icons sit inline before the option label text:
 Screen/print visibility helpers:
 
 - **`.screen-only`** — hidden in print via `@media print`. Used for the 📚 emoji on Media Mail and the live `.rate-tag` spans in the radio button labels.
-- **`.rate-tag`** — styled span (bold, brand blue `#0055a5`) used to display shipping rates inline next to the Media Mail and Priority radio button labels on screen. Rates also appear in the print summary via the `submitted.shippingRate` snapshot on the Method row.
+- **`.rate-tag`** — styled span (bold, brand blue `#0055a5`) used to display shipping rates inline next to the Media Mail, Ground Advantage, and Priority radio button labels on screen. Rates also appear in the print summary via the `submitted.shippingRate` snapshot on the Method row.
 - **`.label-screen`** / **`.label-print`** — used to show different label text on screen vs. print (e.g. "Special Requests" on screen, "Notes" in print).
 - **`.yes-badge`** — print-only (defined inside `@media print`) border + bold style applied via `:class` binding to the Email Tracking and Send Receipt summary values when their value is `"Yes"`. Uses `justify-self: start` so the border wraps only the word, not the full grid column.
 

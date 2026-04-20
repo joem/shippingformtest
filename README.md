@@ -10,25 +10,27 @@ Open `index.html` directly in a browser. Alpine.js is loaded from the jsDelivr C
 
 ## Rate Lookup Assets
 
-Three JavaScript files must be present in the `assets/` folder for shipping rate and zone lookups to work. They are not included in this repository and must be added manually:
+Four JavaScript files must be present in the `assets/` folder for shipping rate and zone lookups to work. They are not included in this repository and must be added manually:
 
 | File | Purpose |
 |------|---------|
 | `assets/media_mail.js` | Defines `mediaMailRates` and `getMediaMailRate(weightLbs)` |
 | `assets/usps_zones.js` | Defines `uspsZones` and `getZone(destZip)` |
 | `assets/priority_mail_retail.js` | Defines `priorityMailRetailRates` and `getPriorityMailRetailRate(weightLbs, zone)` |
+| `assets/usps_ground_advantage.js` | Defines `uspsGroundAdvantageRates` and `getUspsGroundAdvantageRate(weightLbs, zone)` |
 
 If these files are absent, the form still works — shipping method rate displays will simply be blank.
 
 ## Configuration
 
-One constant in `index.html` is intended to be edited by hand when needed:
+Two constants in `index.html` are intended to be edited by hand when needed. Both live in the same small inline `<script>` block just above the Alpine script tag:
 
 ```js
-const PRIORITY_MAIL_RATE_MULTIPLIER = 0.77;
+const PRIORITY_MAIL_RATE_MULTIPLIER = 0.77;    // 23% discount off retail
+const GROUND_ADVANTAGE_RATE_MULTIPLIER = 0.68; // 32% discount off retail
 ```
 
-This multiplier is applied to the base Priority Mail retail rate before display (e.g. `0.77` = 23% discount). It lives in a small inline `<script>` block just above the Alpine script tag, easy to find with a text search for `PRIORITY_MAIL_RATE_MULTIPLIER`.
+These multipliers approximate the Pirate Ship discounted rates and may need adjustment when USPS rates change. Find them with a text search for either constant name.
 
 ## Form Fields
 
@@ -38,7 +40,7 @@ This multiplier is applied to the base Priority Mail retail rate before display 
 | Store | Radio: 112th / Broadway / LIC / Pittsford |
 | Date | Auto-filled to today; editable |
 | Ship-To Name | Recipient name for the package |
-| Shipping Address | ZIP code is parsed from this field for Priority Mail zone lookup |
+| Shipping Address | ZIP code is parsed from this field for Ground Advantage and Priority Mail zone lookups |
 | Customer Name | The customer placing the order |
 | Customer Email | At least one of email/phone required; required if Email Tracking = Yes |
 | Phone # | At least one of email/phone required |
