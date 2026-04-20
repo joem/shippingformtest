@@ -345,7 +345,7 @@
         <div style="display: flex; gap: .75rem;">
           <div style="flex: 1;">
             <label for="initials">Employee Initials<span class="req">*</span></label>
-            <input id="initials" type="text" x-model="form.initials" placeholder="AB" required>
+            <input id="initials" type="text" x-model="form.initials" @input="form.initials = form.initials.toUpperCase()" placeholder="AB" required style="text-transform: uppercase;">
           </div>
           <div style="flex: 1;">
             <label for="date">Date<span class="req">*</span></label>
