@@ -11,10 +11,12 @@ A single-page employee-facing shipping form for a retail book/media store with m
 All logic, styling, and markup are in one file:
 
 - **Alpine.js** (loaded from jsDelivr CDN) drives reactivity via `x-data`, `x-model`, `x-show`, and `x-text` — no separate JS files.
+- **`assets/media_mail.js`** is loaded via `<script defer>` before the Alpine script tag. It defines the global `mediaMailRates` object and `getMediaMailRate(weightLbs)` function used for rate lookups.
 - The `x-data` object on the root `.card` div holds `form` (live input state), `submitted` (snapshot set on submit), `helpOpen` (boolean controlling the Help modal), and `submitAttempted` (boolean set on first print attempt, used to gate the contact-method validation error). Submitting shallow-copies `form` into `submitted`, which makes the summary panel appear via `x-show`.
 - The Print button validates that at least one of `email` or `phone` is filled (custom logic in `submit()`) in addition to the standard HTML5 `required` checks. It also validates that if `emailTracking` is `'Yes'`, `email` must be filled. `submitAttempted` is set to `true` on every submit call so errors only appear after the first attempt.
 - `date` is initialised to today (`new Date().toLocaleDateString('en-CA')`) and reset to today when the Clear button is used.
-- `submitted` receives an extra key `printTime` (set at submission, not part of `form`) holding the time formatted as `HH:MM AM/PM` via `toLocaleTimeString`.
+- `submitted` receives two extra keys set at submission (not part of `form`): `printTime` (time formatted as `HH:MM AM/PM` via `toLocaleTimeString`) and `mediaMailRate` (the formatted rate string, e.g. `"$4.47"`, or empty string if not applicable).
+- `mediaMailRate()` is a method on the x-data object that converts `form.weightLbs` + `form.weightOz` to decimal pounds and calls `getMediaMailRate()`, returning a formatted string like `"$4.47"` or `""` if no weight is entered or the weight exceeds 70 lbs.
 - `initials` is forced to uppercase on every input event via `@input`.
 - There is no backend, build tool, bundler, package manager, or test suite.
 
@@ -53,7 +55,8 @@ Shipping method icons sit inline before the option label text:
 
 Screen/print visibility helpers:
 
-- **`.screen-only`** — hidden in print via `@media print`. Used for the 📚 emoji on Media Mail.
+- **`.screen-only`** — hidden in print via `@media print`. Used for the 📚 emoji on Media Mail and the live `.rate-tag` span in the radio button label.
+- **`.rate-tag`** — styled span (bold, brand blue `#0055a5`) used to display the Media Mail rate inline next to the radio button label on screen. The rate also appears in the print summary via the `submitted.mediaMailRate` snapshot on the Method row.
 - **`.label-screen`** / **`.label-print`** — used to show different label text on screen vs. print (e.g. "Special Requests" on screen, "Notes" in print).
 
 The Help modal uses `.modal-backdrop` (fixed full-screen overlay, closes on outside click) containing `.modal`. It is toggled via `helpOpen`. The modal body currently holds placeholder text to be replaced with real help content later.
