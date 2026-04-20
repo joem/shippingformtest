@@ -62,7 +62,7 @@ The Initials, Store, and Date rows are hidden in the print summary grid (`.initi
 
 ## Version Number
 
-The version string in the `<span class="version">` inside the `<h1>` must be updated to `vYYYY.MM.DD` (e.g. `v2026.04.20`) whenever Claude resumes work on this project. Do this as the first change of each session before committing anything else.
+The version string in the `<span class="version">` inside the `<h1>` must be updated to `vYYYY.MM.DD` whenever Claude resumes work on this project. Use the current date in the **America/New_York** timezone (e.g. `v2026.04.20`). Do this as the first change of each session before committing anything else.
 
 ## Development
 
