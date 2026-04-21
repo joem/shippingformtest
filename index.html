@@ -273,7 +273,7 @@
       .print-date { font-size: .9rem; font-weight: 600; color: black; }
 
       /* Meta line */
-      .print-meta { font-size: .82rem; color: #555; font-weight: 400; margin-bottom: .85rem; display: flex; justify-content: space-between; align-items: baseline; }
+      .print-meta { font-size: .82rem; color: #555; font-weight: 400; margin-top: .75rem; margin-bottom: .85rem; display: flex; justify-content: space-between; align-items: baseline; }
       .receipt-field { font-size: .82rem; color: #555; }
       .receipt-line { display: inline-block; border-bottom: 1.5px solid black; min-width: 7rem; margin-left: .3rem; vertical-align: baseline; }
 
@@ -419,6 +419,10 @@
       const rate = getUspsGroundAdvantageRate(lbs + (oz + pkgOz) / 16, zone);
       return rate != null ? '$' + (rate * GROUND_ADVANTAGE_RATE_MULTIPLIER).toFixed(2) : '';
     },
+    formatNotes(text) {
+      if (!text) return '';
+      return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+    },
     submit() {
       this.submitAttempted = true;
       if (!this.form.email && !this.form.phone) return;
@@ -434,7 +438,7 @@
 
     <div class="form-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: .5rem;">
       <h1 style="margin-bottom: 0;">Shipping Form <span class="version" style="font-size: .55em; font-weight: 400; letter-spacing: 0;">v2026.04.20</span></h1>
-      <span class="print-date" x-text="submitted?.date + ' \u2013 ' + submitted?.printTime"></span>
+      <span class="print-date" x-text="submitted?.date ? submitted.date.replace(/(\d{4})-(\d{2})-(\d{2})/, (_, y, m, d) => +m + '/' + +d + '/' + y) + ' \u2013 ' + submitted.printTime : ''"></span>
       <div style="display: flex; gap: .5rem;">
         <button type="button" class="help-btn" @click="helpOpen = true">Help</button>
         <button type="button" class="help-btn" style="color: #dc2626; border-color: #fca5a5;" @click="form = { name: '', address: '', weightLbs: '', weightOz: '', packagingOz: 6, method: '', initials: '', store: '', date: new Date().toLocaleDateString('en-CA'), email: '', phone: '', emailTracking: '', specialRequests: '', sendReceipt: '', customerName: '' }; submitted = null; submitAttempted = false;">Clear</button>
@@ -626,7 +630,7 @@
         <div class="summary-row"><span class="summary-label">Weight</span>         <span class="summary-value" x-text="submitted?.weightLbs + ' lbs' + (submitted?.weightOz ? ' ' + submitted?.weightOz + ' oz' : '') + (submitted?.packagingOz ? ' + ' + submitted?.packagingOz + ' oz pkg' : '')"></span></div>
         <div class="summary-row"><span class="summary-label">Method</span>         <span class="summary-value" x-text="submitted?.method + (submitted?.shippingRate ? ' \u2014 ' + submitted?.shippingRate : '')"></span></div>
         <div class="summary-row"><span class="summary-label">Send Receipt</span>   <span class="summary-value" :class="submitted?.sendReceipt === 'Yes' ? 'yes-badge' : ''" x-text="submitted?.sendReceipt"></span></div>
-        <div class="summary-row notes-row" x-show="submitted?.specialRequests"><span class="summary-label"><span class="label-screen">Special Requests</span><span class="label-print">Notes</span></span> <span class="summary-value" x-text="submitted?.specialRequests"></span></div>
+        <div class="summary-row notes-row" x-show="submitted?.specialRequests"><span class="summary-label"><span class="label-screen">Special Requests</span><span class="label-print">Notes</span></span> <span class="summary-value" x-html="formatNotes(submitted?.specialRequests)"></span></div>
       </div>
       <div class="shipper-box">
         <p class="shipper-box-title">For shipper use only</p>
@@ -634,7 +638,7 @@
           <span class="shipper-label">Tracking #</span>
           <span class="shipper-line"></span>
         </div>
-        <div style="display: flex; gap: 1.5rem;">
+        <div style="display: flex; gap: 1.5rem; margin-top: .75rem;">
           <div class="shipper-field" style="flex: 1;">
             <span class="shipper-label">Shipping Date</span>
             <span class="shipper-line"></span>
